@@ -1,0 +1,142 @@
+/* Reset and basic layout */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Roboto", sans-serif;
+}
+
+body {
+  background: #f7f7f7;
+  color: #333;
+  font-size: 16px;
+  height: 100%;
+  padding: 0 10px;
+}
+
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 20px;
+  height: 100%;
+}
+
+/* Header Styling */
+header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+h1.title {
+  font-size: 3rem;
+  color: #2c3e50;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.subheading {
+  font-size: 1.2rem;
+  color: #7f8c8d;
+}
+
+/* Start Button */
+.start-button {
+  padding: 15px 40px;
+  font-size: 1.2rem;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+}
+
+.start-button:hover {
+  background: #2980b9;
+  transform: scale(1.05);
+}
+
+.start-button:active {
+  transform: scale(0.98);
+}
+
+/* Chat Box */
+.chat-box {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.1);
+  overflow-y: scroll;
+  max-height: 400px;
+  margin-bottom: 20px;
+}
+
+/* Message styling */
+.message {
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 16px;
+  max-width: 70%;
+  word-wrap: break-word;
+  opacity: 0;
+  animation: fadeIn 0.5s forwards;
+}
+
+.user {
+  align-self: flex-end;
+  background-color: #f39c12;
+  color: white;
+}
+
+.ai {
+  align-self: flex-start;
+  background-color: #8e44ad;
+  color: white;
+}
+
+/* Status Indicator */
+.status-indicator {
+  margin-top: 20px;
+  padding: 15px;
+  font-weight: bold;
+  text-align: center;
+  background: #2ecc71;
+  color: white;
+  border-radius: 12px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.status-indicator.listening {
+  background-color: #e67e22;
+}
+
+.status-indicator.speaking {
+  background-color: #f39c12;
+}
+
+.status-indicator.waiting {
+  background-color: #95a5a6;
+}
+
+/* Message Fade-In Effect */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Footer Styling */
+.footer {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 0.9em;
+  color: #7f8c8d;
+}

@@ -1,0 +1,14 @@
+anthropic
+numpy==1.26.4
+openai
+pandas==2.2.2
+pyaudio==0.2.14
+pygame==2.5.2
+PyPDF2==1.26.0
+python-dotenv==1.0.1
+tqdm==4.66.4
+pydub==0.25.1
+deepgram-sdk==3.10.1
+fastapi
+python-multipart
+faster-whisper

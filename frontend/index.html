@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>InterAct AI - Virtual Interview</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      /* Reset and basic layout */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: #333;
+        overflow-x: hidden;
+      }
+
+      /* Animated background particles */
+      .bg-animation {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      .particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        animation: float 6s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(180deg); }
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Header Styling */
+      header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding-top: 40px;
+      }
+
+      .logo-container {
+        display: inline-flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .logo-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #ff6b6b, #feca57);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+      }
+
+      h1.title {
+        font-size: 3.5rem;
+        background: linear-gradient(135deg, #fff, #f1f2f6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 700;
+        margin: 0;
+        text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .subheading {
+        font-size: 1.3rem;
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 300;
+        margin-top: 10px;
+      }
+
+      /* Start Section */
+      .start-section {
+        text-align: center;
+        margin: 40px 0;
+      }
+
+      .start-button {
+        padding: 18px 50px;
+        font-size: 1.3rem;
+        font-weight: 600;
+        background: linear-gradient(135deg, #4facfe, #00f2fe);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        box-shadow: 0 10px 30px rgba(79, 172, 254, 0.3);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .start-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+      }
+
+      .start-button:hover::before {
+        left: 100%;
+      }
+
+      .start-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 40px rgba(79, 172, 254, 0.4);
+      }
+
+      .start-button:active {
+        transform: translateY(0);
+      }
+
+      /* Chat Box */
+      .chat-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 24px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .chat-header {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 20px;
+        text-align: center;
+        font-weight: 600;
+      }
+
+      .chat-box {
+        flex: 1;
+        padding: 30px;
+        overflow-y: auto;
+        max-height: 400px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      /* Message styling */
+      .message {
+        padding: 16px 20px;
+        border-radius: 20px;
+        max-width: 75%;
+        word-wrap: break-word;
+        font-size: 15px;
+        line-height: 1.5;
+        opacity: 0;
+        animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        position: relative;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .message.user {
+        align-self: flex-end;
+        background: linear-gradient(135deg, #4facfe, #00f2fe);
+        color: white;
+        border-bottom-right-radius: 8px;
+      }
+
+      .message.ai {
+        align-self: flex-start;
+        background: linear-gradient(135deg, #a8edea, #fed6e3);
+        color: #2c3e50;
+        border-bottom-left-radius: 8px;
+      }
+
+      .message::before {
+        content: '';
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        bottom: 0;
+      }
+
+      .message.user::before {
+        right: -4px;
+        background: linear-gradient(135deg, #4facfe, #00f2fe);
+        border-radius: 0 0 0 8px;
+      }
+
+      .message.ai::before {
+        left: -4px;
+        background: linear-gradient(135deg, #a8edea, #fed6e3);
+        border-radius: 0 0 8px 0;
+      }
+
+      /* Status Indicator */
+      .status-container {
+        padding: 20px 30px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .status-indicator {
+        padding: 16px 24px;
+        font-weight: 600;
+        text-align: center;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .status-indicator.listening {
+        background: linear-gradient(135deg, #ff6b6b, #feca57);
+        color: white;
+        animation: breathe 2s ease-in-out infinite;
+      }
+
+      .status-indicator.speaking {
+        background: linear-gradient(135deg, #4facfe, #00f2fe);
+        color: white;
+      }
+
+      .status-indicator.processing {
+        background: linear-gradient(135deg, #a8edea, #fed6e3);
+        color: #2c3e50;
+      }
+
+      @keyframes breathe {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+      }
+
+      /* Microphone animation */
+      .mic-icon {
+        font-size: 20px;
+        animation: pulse 1s infinite;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .container {
+          padding: 15px;
+        }
+        
+        h1.title {
+          font-size: 2.5rem;
+        }
+        
+        .start-button {
+          padding: 16px 40px;
+          font-size: 1.1rem;
+        }
+        
+        .message {
+          max-width: 85%;
+          font-size: 14px;
+        }
+      }
+
+      /* Hide elements initially */
+      .chat-container, .status-container {
+        display: none;
+      }
+
+      .chat-container.active, .status-container.active {
+        display: flex;
+      }
+
+      /* Loading dots animation */
+      .loading-dots {
+        display: inline-block;
+      }
+
+      .loading-dots::after {
+        content: '';
+        animation: dots 1.5s infinite;
+      }
+
+      @keyframes dots {
+        0%, 33% { content: ''; }
+        66% { content: '.'; }
+        100% { content: '..'; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bg-animation"></div>
+    
+    <div class="container">
+      <header>
+        <div class="logo-container">
+          <div class="logo-icon">🤖</div>
+          <div>
+            <h1 class="title">InterAct AI</h1>
+            <p class="subheading">Your Intelligent Interview Partner</p>
+          </div>
+        </div>
+      </header>
+
+      <section id="startSection" class="start-section">
+        <button id="startBtn" class="start-button">
+          🎙️ Start Interview
+        </button>
+        <p style="margin-top: 20px; color: rgba(255,255,255,0.8); font-size: 14px;">
+          Click to begin your AI-powered interview experience
+        </p>
+      </section>
+
+      <div id="chatContainer" class="chat-container">
+        <div class="chat-header">
+          <div>💬 Interview in Progress</div>
+        </div>
+        <div id="chatBox" class="chat-box"></div>
+      </div>
+
+      <div id="statusContainer" class="status-container">
+        <div id="statusIndicator" class="status-indicator">
+          Ready to start
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Create animated background particles
+      function createParticles() {
+        const animation = document.querySelector('.bg-animation');
+        for (let i = 0; i < 50; i++) {
+          const particle = document.createElement('div');
+          particle.className = 'particle';
+          particle.style.left = Math.random() * 100 + '%';
+          particle.style.top = Math.random() * 100 + '%';
+          particle.style.animationDelay = Math.random() * 6 + 's';
+          animation.appendChild(particle);
+        }
+      }
+      
+      createParticles();
+
+      let audioContext;
+      let processor;
+      let input;
+      let stream;
+      let socket;
+      let isAITalking = false;
+      let audioBuffer = [];
+      let silenceThreshold = 0.01;
+      let silenceDuration = 1000;
+      let silenceStartTime = null;
+      let speaking = false;
+
+      // UI helpers
+      function updateStatus(text, type) {
+        const status = document.getElementById("statusIndicator");
+        const icon = type === 'listening' ? '🎙️' : type === 'speaking' ? '🔊' : '⏳';
+        status.innerHTML = `<span class="mic-icon">${icon}</span> ${text}`;
+        status.className = `status-indicator ${type}`;
+      }
+
+      function appendMessage(text, sender) {
+        const chatBox = document.getElementById("chatBox");
+        const div = document.createElement("div");
+        div.className = `message ${sender}`;
+        div.textContent = text;
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }
+
+      function floatTo16BitPCM(input) {
+        const output = new Int16Array(input.length);
+        for (let i = 0; i < input.length; i++) {
+          output[i] = Math.max(-1, Math.min(1, input[i])) * 32767;
+        }
+        return output;
+      }
+
+      function encodeWAV(samples, sampleRate = 44100) {
+        const buffer = new ArrayBuffer(44 + samples.length * 2);
+        const view = new DataView(buffer);
+
+        const writeString = (offset, str) => {
+          for (let i = 0; i < str.length; i++) {
+            view.setUint8(offset + i, str.charCodeAt(i));
+          }
+        };
+
+        writeString(0, "RIFF");
+        view.setUint32(4, 36 + samples.length * 2, true);
+        writeString(8, "WAVE");
+        writeString(12, "fmt ");
+        view.setUint32(16, 16, true);
+        view.setUint16(20, 1, true);
+        view.setUint16(22, 1, true);
+        view.setUint32(24, sampleRate, true);
+        view.setUint32(28, sampleRate * 2, true);
+        view.setUint16(32, 2, true);
+        view.setUint16(34, 16, true);
+        writeString(36, "data");
+        view.setUint32(40, samples.length * 2, true);
+
+        const pcm = floatTo16BitPCM(samples);
+        for (let i = 0; i < pcm.length; i++) {
+          view.setInt16(44 + i * 2, pcm[i], true);
+        }
+
+        return new Blob([view], { type: "audio/wav" });
+      }
+
+      // Start Interview
+      document.getElementById("startBtn").addEventListener("click", async () => {
+        // Show chat interface
+        document.getElementById("startSection").style.display = "none";
+        document.getElementById("chatContainer").classList.add("active");
+        document.getElementById("statusContainer").classList.add("active");
+
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        audioContext = new AudioContext();
+        input = audioContext.createMediaStreamSource(stream);
+        processor = audioContext.createScriptProcessor(4096, 1, 1);
+
+        socket = new WebSocket("ws://localhost:8000/ws/interview");
+        socket.binaryType = "arraybuffer";
+
+        let rawAudio = [];
+
+        socket.onopen = () => {
+          console.log("✅ WebSocket connected");
+          socket.send("__start__");
+          updateStatus("Listening for your response", "listening");
+
+          processor.onaudioprocess = (e) => {
+            if (isAITalking) return;
+
+            const inputData = e.inputBuffer.getChannelData(0);
+            rawAudio.push(...inputData);
+
+            const max = Math.max(...inputData.map((v) => Math.abs(v)));
+
+            if (max > silenceThreshold) {
+              silenceStartTime = null;
+              speaking = true;
+            } else if (speaking) {
+              if (!silenceStartTime) silenceStartTime = Date.now();
+              else if (Date.now() - silenceStartTime > silenceDuration) {
+                speaking = false;
+                silenceStartTime = null;
+
+                processor.disconnect();
+                input.disconnect();
+
+                const wavBlob = encodeWAV(rawAudio);
+                socket.send(wavBlob);
+                socket.send("__end__");
+
+                rawAudio = [];
+                updateStatus("Processing your response<span class='loading-dots'></span>", "processing");
+              }
+            }
+          };
+
+          input.connect(processor);
+          processor.connect(audioContext.destination);
+        };
+
+        socket.onmessage = async (event) => {
+          if (typeof event.data === "string") {
+            if (event.data.startsWith("TRANSCRIPT::")) {
+              const userText = event.data.replace("TRANSCRIPT::", "").trim();
+              appendMessage(userText, "user");
+            } else if (event.data.startsWith("REPLY::")) {
+              const replyText = event.data.replace("REPLY::", "").trim();
+              appendMessage(replyText, "ai");
+              isAITalking = true;
+              updateStatus("AI is responding", "speaking");
+            } else if (event.data === "__end__") {
+              const blob = new Blob(audioBuffer, { type: "audio/mpeg" });
+              const audioUrl = URL.createObjectURL(blob);
+              const audio = new Audio(audioUrl);
+
+              audio.onended = () => {
+                isAITalking = false;
+                audioBuffer = [];
+
+                input.connect(processor);
+                processor.connect(audioContext.destination);
+                updateStatus("Listening for your response", "listening");
+              };
+
+              await audio.play();
+            }
+          } else {
+            audioBuffer.push(event.data);
+          }
+        };
+
+        socket.onerror = (err) => console.error("WebSocket error:", err);
+        socket.onclose = () => console.log("WebSocket closed");
+      });
+    </script>
+  </body>
+</html>
